@@ -1,0 +1,21 @@
+p = 1;
+q = 0;
+a = unknown0;
+b = unknown1;
+s = 1;
+r = 0;
+if (a <= b) {
+	p = p;
+	q = q + -1*p;
+	a = a;
+	b = b + -1*a;
+	s = s + -1*r;
+	r = r;
+} else {
+	p = p + -1*q;
+	q = q;
+	a = a + -1*b;
+	b = b;
+	s = s;
+	r = r + -1*s;
+}
