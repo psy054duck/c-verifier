@@ -1,5 +1,5 @@
 from .PRS.prs_solver import solve_sym, solve_sym_str, solve_recurrence_expr
-from .PRS.mathematica_manipulation import session
+# from .PRS.mathematica_manipulation import session
 import z3
 import sympy as sp
 import fire
@@ -90,4 +90,4 @@ if __name__ == '__main__':
     # fire.Fire(pretty_solve_and_print)
     # pretty_solve_and_print('../temp/rec.txt')
     pretty_solve_and_print('test.txt')
-session.terminate()
+# session.terminate()

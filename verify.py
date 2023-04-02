@@ -1,6 +1,6 @@
 from visitor import C2Z3Visitor
 from preprocessor import preprocess
-from rec_solver.PRS.mathematica_manipulation import session
+# from rec_solver.PRS.mathematica_manipulation import session
 from pycparser import parse_file
 import time
 import fire
@@ -9,12 +9,12 @@ import os
 import signal
 import psutil
 
-def exit_handler():
-    session.terminate()
-    print('exit successfully')
-
-atexit.register(exit_handler)
-signal.signal(signal.SIGTERM, exit_handler)
+# def exit_handler():
+#     session.terminate()
+#     print('exit successfully')
+# 
+# atexit.register(exit_handler)
+# signal.signal(signal.SIGTERM, exit_handler)
 
 def verify(filename):
     if not os.path.exists('temp'):
@@ -27,19 +27,22 @@ def verify(filename):
     # ast = parse_file(to_preprossed_path, use_cpp=True)
     # visitor = C2Z3Visitor()
     # visitor.visit(ast)
-    session.terminate()
+    # session.terminate()
 
 def except_verify(filename):
     try:
         verify(filename)
-        session.terminate()
-    finally:
-        session.terminate()
+    except:
+        pass
+        # session.terminate()
+    # finally:
+        # session.terminate()
     # time.sleep(0.5)
 
 
 if __name__ == '__main__':
-    fire.Fire(except_verify)
+    # fire.Fire(except_verify)
+    fire.Fire(verify)
     # verify('./benchmarks/pldi22/branching_loops_modified/leapfrog_safe.c')
     # verify('./benchmarks/pldi22/branching_loops/bobble.c')
     # verify('./benchmarks/pldi22/sv-comp/loops-crafted-1/iftelse.c')

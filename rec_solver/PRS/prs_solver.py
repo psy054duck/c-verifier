@@ -1,10 +1,17 @@
 import sympy as sp
 from sympy.core import symbol
 from .condition import And, PolyCondition, ModCondition
-from .closed_form import closed_form, symbolic_closed_form, solve_rec_expr
+from .closed_form import closed_form, symbolic_closed_form_linear, solve_rec_expr
+# from .old_parser import parse
 from .parser import parse
 import os
 import time
+
+#TODO mark
+def is_linear_transition(transition):
+    for v, exp in transition.items():
+        pass
+        
 
 def solve(filename):
     with open(filename) as fp:
@@ -26,17 +33,17 @@ def solve_str(recurrence: str):
     return res, variables, index, end - start
 
 def solve_sym_str(recurrence: str):
-    cond, x0, A, variables, index = parse(recurrence)
+    cond, x0, transitions, variables, index = parse(recurrence)
     initial_symbols = []
     for i, v in enumerate(x0):
         if v.is_symbol and v.name != 'constant':
             initial_symbols.append(v)
-    res = symbolic_closed_form(A, x0, cond, variables, index, bnd=99999999)
+    res = symbolic_closed_form_linear(transitions, x0, cond, variables, index, bnd=99999999)
     return res, variables, initial_symbols
 
 def solve_recurrence_expr(recurrence):
-    conds, x0, A, variables, index = parse(recurrence)
-    return solve_rec_expr(A, x0, conds, variables, index)
+    conds, x0, transitions, variables, index = parse(recurrence)
+    return solve_rec_expr(transitions, x0, conds, variables, index)
 
 def solve_sym(filename):
     with open(filename) as fp:

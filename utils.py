@@ -187,7 +187,10 @@ def to_z3(sp_expr):
         res = 1
         for arg in reversed(self.args):
             if arg.is_number and not arg.is_Integer:
-                res = (res*arg.numerator())/arg.denominator()
+                try:
+                    res = (res*arg.numerator())/arg.denominator()
+                except:
+                    res = (res*arg.numerator)/arg.denominator
             else:
                 res = res * to_z3(arg)
         return z3.simplify(res)

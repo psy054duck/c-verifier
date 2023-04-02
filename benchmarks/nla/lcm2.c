@@ -21,6 +21,8 @@ int main() {
             y = y - x;
             u = u + v;
         }
+        a = a;
+        b = b;
     }
 
     __VERIFIER_assert(x*u + y*v == 2*a*b);

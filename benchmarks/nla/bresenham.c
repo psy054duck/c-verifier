@@ -18,6 +18,8 @@ int main() {
             y++;
         }
         x++;
+        X = X;
+        Y = Y;
     }
     __VERIFIER_assert(2*Y*x - 2*x*y - X + 2*Y - v + 2*y == 0);
 

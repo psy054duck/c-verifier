@@ -1,5 +1,4 @@
 from operator import index
-from wolframclient.evaluation.kernel import localsession
 # from utils import closed_form2mod
 from numpy import SHIFT_INVALID, matrix
 import sympy as sp
@@ -13,7 +12,13 @@ from .guess import guess_pattern
 from .utils import my_expand, my_simplify, next_element, next_element_by_index, strict2non, mk_begin_with_z3, simplify_index_seq
 from .validation import validate
 from .condition import PolyCondition
-from .mathematica_manipulation import matrix2mathematica, matrix_power_mathematica, matrix_mul
+
+# DEFAULT_MATH_TOOL = 'mathematica'
+DEFAULT_MATH_TOOL = 'sympy'
+
+if DEFAULT_MATH_TOOL == 'mathematica':
+    from wolframclient.evaluation.kernel import localsession
+    from .mathematica_manipulation import matrix2mathematica, matrix_power_mathematica, matrix_mul
 
 def jordan_cell_power(jc, n):
         N = jc.shape[0]
@@ -35,7 +40,7 @@ def matrix_power_sympy(M, n):
         c = P.inv()
         return P*sp.diag(*jordan_cells)*P.inv()
 
-def matrix_power(M, n, methods='mathematica'):
+def matrix_power(M, n, methods=DEFAULT_MATH_TOOL):
     if methods == 'sympy':
         return matrix_power_sympy(M, n)
     else:
@@ -166,7 +171,7 @@ def solve_poly_rec(k, p, transitions, inits):
 #             res = solve_rec(k, p, transitions, inits)
 #             print(res)
 
-def symbolic_closed_form(A, x0, conds, order, n, bnd=100):
+def symbolic_closed_form_linear(A, x0, conds, order, n, bnd=100):
     rename = {order[i]: sp.Symbol('_PRS_x%d' % i) for i in range(len(order))}
     sat = z3.Solver()
     qe = z3.Then('qe', 'ctx-solver-simplify')

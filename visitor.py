@@ -7,7 +7,7 @@ from sympy.utilities.misc import translate
 import utils
 import z3
 import re
-from rec_solver.PRS.mathematica_manipulation import session
+# from rec_solver.PRS.mathematica_manipulation import session
 import time
 import sympy as sp
 
@@ -356,16 +356,17 @@ class MainVisitor(c_ast.NodeVisitor):
             self.cached_quantified_assertions.extend([(a, N) for a in self.cached_assertions])
             self.cached_assertions = old_cached_assertions
             self.N_index += 1
-            res = {var: z3.substitute(closed, (index, N)) for var, closed in res.items()}
+            ret = {var: z3.substitute(closed, (index, N)) for var, closed in res.items()}
         else:
+            ret = {v: z3.Int('uuuuu%d' % i) for i, v in enumerate(self.cur_values)}
+            sub_pairs_sp = {sp.Symbol(str(v)): sp.Symbol('uuuuu%d' % i, integer=True) for i, v in enumerate(self.cur_values)}
             N = z3.Int('N%d' % self.N_index)
             self.cached_N_constraints.append(z3.Not(cond))
             for expr, closed in res:
-                self.cached_N_constraints.append(utils.to_z3(sp.Eq(expr, closed)))
+                self.cached_N_constraints.append(utils.to_z3(sp.Eq(expr.subs(sub_pairs_sp), closed)))
             self.N_index += 1
-            res = {v: z3.Int('uuuuu%d' % i) for i, v in enumerate(self.cur_values)}
             # res = {}
-        return res
+        return ret
 
     def visit_If(self, n):
         cond = self._arith2bool(self.visit(n.cond))
@@ -590,4 +591,4 @@ if __name__ == '__main__':
     ast = parse_file(to_preprossed_path, use_cpp=True)
     visitor = C2Z3Visitor()
     visitor.visit(ast)
-    session.terminate()
+    # session.terminate()
