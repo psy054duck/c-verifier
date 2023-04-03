@@ -26,6 +26,8 @@ int main() {
             q = q - p;
             s = s - r;
         }
+        x = x;
+        y = y;
     }
     
     __VERIFIER_assert(a - b == 0);    

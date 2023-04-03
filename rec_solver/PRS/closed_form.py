@@ -115,9 +115,11 @@ def vec_space_d(X, inits, transitions, d):
         basis_instances = []
         for vec in basis:
             instance = poly_template.subs({c: v for v, c in zip(vec, coeffs)}, simultaneous=True)
-            basis_instances.append(instance)
+            numerator, _ = sp.fraction(sp.factor(instance))
+            basis_instances.append(numerator)
         # symbolic_baiss = [(vec.T * Matrix(coeffs))[0] for vec in basis]
-        ret.append((k, basis_instances))
+        if len(basis_instances) != 0:
+            ret.append((k, basis_instances))
     all_coeffs = []
     const_dummy_symbol = sp.Symbol('aaaaa0', real=True)
     coeffs.append(const_dummy_symbol)
@@ -131,8 +133,10 @@ def vec_space_d(X, inits, transitions, d):
     basis_instances = []
     for vec in basis:
         instance = poly_template.subs({c: v for v, c in zip(vec, coeffs)}, simultaneous=True)
-        basis_instances.append(instance)
-    ret.append((sp.Integer(1), basis_instances))
+        numerator, _ = sp.fraction(sp.factor(instance))
+        basis_instances.append(numerator)
+    if len(basis) != 0:
+        ret.append((sp.Integer(1), basis_instances))
     return ret
 
 def solve_poly_rec(k, p, transitions, inits):
@@ -143,6 +147,11 @@ def solve_poly_rec(k, p, transitions, inits):
                 return (p, 0)
             else:
                 return (p, sp.Piecewise((0, _n >= 1), (p.subs(inits, simultaneous=True), True)))
+        elif sp.simplify(p.subs(inits, simultaneous=True)) == 0:
+            return (p, 0)
+            # return (p, k**_n*sp.simplify(p.subs(inits, simultaneous=True)))
+        else:
+            return (1, 1)
     else:
         cs = [sp.simplify(p.subs(tran, simultaneous=True) - p) for tran in transitions]
         if all([c == cs[0] for c in cs]):

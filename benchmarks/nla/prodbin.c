@@ -19,6 +19,8 @@ int main() {
         }
         x = 2 * x;
         y = y / 2;
+        a = a;
+        b = b;
     }
     __VERIFIER_assert(z == a * b);
     

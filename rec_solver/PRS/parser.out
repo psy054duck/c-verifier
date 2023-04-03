@@ -37,12 +37,13 @@ Rule 31    expression -> factor
 Rule 32    factor -> factor TIMES unary_expression
 Rule 33    factor -> factor MOD unary_expression
 Rule 34    factor -> unary_expression
-Rule 35    unary_expression -> PLUS symbol_number
-Rule 36    unary_expression -> MINUS symbol_number
-Rule 37    unary_expression -> symbol_number
-Rule 38    unary_expression -> LPAREN expression RPAREN
-Rule 39    symbol_number -> NUMBER
-Rule 40    symbol_number -> ID
+Rule 35    factor -> factor DIV unary_expression
+Rule 36    unary_expression -> PLUS symbol_number
+Rule 37    unary_expression -> MINUS symbol_number
+Rule 38    unary_expression -> symbol_number
+Rule 39    unary_expression -> LPAREN expression RPAREN
+Rule 40    symbol_number -> NUMBER
+Rule 41    symbol_number -> ID
 
 Terminals, with rules where they appear
 
@@ -50,28 +51,29 @@ AND                  : 15
 ASSIGN               : 4 8
 COMMA                : 18
 DECRE                : 10
+DIV                  : 35
 ELSE                 : 27 28
 EQ                   : 24
 GE                   : 21
 GT                   : 20
-ID                   : 4 8 9 10 11 12 40
+ID                   : 4 8 9 10 11 12 41
 IF                   : 26 27 28
 INCRE                : 9
 LBRACE               : 6
 LE                   : 23
-LPAREN               : 14 15 17 26 27 28 38
+LPAREN               : 14 15 17 26 27 28 39
 LT                   : 22
 ME                   : 12
-MINUS                : 30 36
+MINUS                : 30 37
 MOD                  : 33
 NE                   : 25
 NOT                  : 14
-NUMBER               : 11 12 39
+NUMBER               : 11 12 40
 OR                   : 17
 PE                   : 11
-PLUS                 : 29 35
+PLUS                 : 29 36
 RBRACE               : 6
-RPAREN               : 14 15 17 26 27 28 38
+RPAREN               : 14 15 17 26 27 28 39
 SEMI                 : 4 8 9 10 11 12
 TIMES                : 32
 TRUE                 : 16
@@ -84,14 +86,14 @@ assignments          : 5 6 26 27 27 28
 cmpop                : 13
 condition            : 14 18 19 26 27 28
 condition_list       : 15 17 18
-expression           : 4 8 13 13 29 30 38
-factor               : 29 30 31 32 33
+expression           : 4 8 13 13 29 30 39
+factor               : 29 30 31 32 33 35
 if                   : 1 28
 initialization       : 2
 initializations      : 1 2
 program              : 0
-symbol_number        : 35 36 37
-unary_expression     : 32 33 34
+symbol_number        : 36 37 38
+unary_expression     : 32 33 34 35
 
 Parsing method: LALR
 
@@ -179,12 +181,13 @@ state 8
     (32) factor -> . factor TIMES unary_expression
     (33) factor -> . factor MOD unary_expression
     (34) factor -> . unary_expression
-    (35) unary_expression -> . PLUS symbol_number
-    (36) unary_expression -> . MINUS symbol_number
-    (37) unary_expression -> . symbol_number
-    (38) unary_expression -> . LPAREN expression RPAREN
-    (39) symbol_number -> . NUMBER
-    (40) symbol_number -> . ID
+    (35) factor -> . factor DIV unary_expression
+    (36) unary_expression -> . PLUS symbol_number
+    (37) unary_expression -> . MINUS symbol_number
+    (38) unary_expression -> . symbol_number
+    (39) unary_expression -> . LPAREN expression RPAREN
+    (40) symbol_number -> . NUMBER
+    (41) symbol_number -> . ID
 
     PLUS            shift and go to state 12
     MINUS           shift and go to state 14
@@ -213,12 +216,13 @@ state 9
     (32) factor -> . factor TIMES unary_expression
     (33) factor -> . factor MOD unary_expression
     (34) factor -> . unary_expression
-    (35) unary_expression -> . PLUS symbol_number
-    (36) unary_expression -> . MINUS symbol_number
-    (37) unary_expression -> . symbol_number
-    (38) unary_expression -> . LPAREN expression RPAREN
-    (39) symbol_number -> . NUMBER
-    (40) symbol_number -> . ID
+    (35) factor -> . factor DIV unary_expression
+    (36) unary_expression -> . PLUS symbol_number
+    (37) unary_expression -> . MINUS symbol_number
+    (38) unary_expression -> . symbol_number
+    (39) unary_expression -> . LPAREN expression RPAREN
+    (40) symbol_number -> . NUMBER
+    (41) symbol_number -> . ID
 
     NOT             shift and go to state 21
     AND             shift and go to state 22
@@ -238,21 +242,22 @@ state 9
 
 state 10
 
-    (40) symbol_number -> ID .
+    (41) symbol_number -> ID .
 
-    TIMES           reduce using rule 40 (symbol_number -> ID .)
-    MOD             reduce using rule 40 (symbol_number -> ID .)
-    SEMI            reduce using rule 40 (symbol_number -> ID .)
-    PLUS            reduce using rule 40 (symbol_number -> ID .)
-    MINUS           reduce using rule 40 (symbol_number -> ID .)
-    GT              reduce using rule 40 (symbol_number -> ID .)
-    GE              reduce using rule 40 (symbol_number -> ID .)
-    LT              reduce using rule 40 (symbol_number -> ID .)
-    LE              reduce using rule 40 (symbol_number -> ID .)
-    EQ              reduce using rule 40 (symbol_number -> ID .)
-    NE              reduce using rule 40 (symbol_number -> ID .)
-    RPAREN          reduce using rule 40 (symbol_number -> ID .)
-    COMMA           reduce using rule 40 (symbol_number -> ID .)
+    TIMES           reduce using rule 41 (symbol_number -> ID .)
+    MOD             reduce using rule 41 (symbol_number -> ID .)
+    DIV             reduce using rule 41 (symbol_number -> ID .)
+    SEMI            reduce using rule 41 (symbol_number -> ID .)
+    PLUS            reduce using rule 41 (symbol_number -> ID .)
+    MINUS           reduce using rule 41 (symbol_number -> ID .)
+    GT              reduce using rule 41 (symbol_number -> ID .)
+    GE              reduce using rule 41 (symbol_number -> ID .)
+    LT              reduce using rule 41 (symbol_number -> ID .)
+    LE              reduce using rule 41 (symbol_number -> ID .)
+    EQ              reduce using rule 41 (symbol_number -> ID .)
+    NE              reduce using rule 41 (symbol_number -> ID .)
+    RPAREN          reduce using rule 41 (symbol_number -> ID .)
+    COMMA           reduce using rule 41 (symbol_number -> ID .)
 
 
 state 11
@@ -268,9 +273,9 @@ state 11
 
 state 12
 
-    (35) unary_expression -> PLUS . symbol_number
-    (39) symbol_number -> . NUMBER
-    (40) symbol_number -> . ID
+    (36) unary_expression -> PLUS . symbol_number
+    (40) symbol_number -> . NUMBER
+    (41) symbol_number -> . ID
 
     NUMBER          shift and go to state 18
     ID              shift and go to state 10
@@ -282,6 +287,7 @@ state 13
     (31) expression -> factor .
     (32) factor -> factor . TIMES unary_expression
     (33) factor -> factor . MOD unary_expression
+    (35) factor -> factor . DIV unary_expression
 
     SEMI            reduce using rule 31 (expression -> factor .)
     PLUS            reduce using rule 31 (expression -> factor .)
@@ -296,18 +302,19 @@ state 13
     COMMA           reduce using rule 31 (expression -> factor .)
     TIMES           shift and go to state 29
     MOD             shift and go to state 30
+    DIV             shift and go to state 31
 
 
 state 14
 
-    (36) unary_expression -> MINUS . symbol_number
-    (39) symbol_number -> . NUMBER
-    (40) symbol_number -> . ID
+    (37) unary_expression -> MINUS . symbol_number
+    (40) symbol_number -> . NUMBER
+    (41) symbol_number -> . ID
 
     NUMBER          shift and go to state 18
     ID              shift and go to state 10
 
-    symbol_number                  shift and go to state 31
+    symbol_number                  shift and go to state 32
 
 state 15
 
@@ -315,6 +322,7 @@ state 15
 
     TIMES           reduce using rule 34 (factor -> unary_expression .)
     MOD             reduce using rule 34 (factor -> unary_expression .)
+    DIV             reduce using rule 34 (factor -> unary_expression .)
     SEMI            reduce using rule 34 (factor -> unary_expression .)
     PLUS            reduce using rule 34 (factor -> unary_expression .)
     MINUS           reduce using rule 34 (factor -> unary_expression .)
@@ -330,38 +338,40 @@ state 15
 
 state 16
 
-    (37) unary_expression -> symbol_number .
+    (38) unary_expression -> symbol_number .
 
-    TIMES           reduce using rule 37 (unary_expression -> symbol_number .)
-    MOD             reduce using rule 37 (unary_expression -> symbol_number .)
-    SEMI            reduce using rule 37 (unary_expression -> symbol_number .)
-    PLUS            reduce using rule 37 (unary_expression -> symbol_number .)
-    MINUS           reduce using rule 37 (unary_expression -> symbol_number .)
-    GT              reduce using rule 37 (unary_expression -> symbol_number .)
-    GE              reduce using rule 37 (unary_expression -> symbol_number .)
-    LT              reduce using rule 37 (unary_expression -> symbol_number .)
-    LE              reduce using rule 37 (unary_expression -> symbol_number .)
-    EQ              reduce using rule 37 (unary_expression -> symbol_number .)
-    NE              reduce using rule 37 (unary_expression -> symbol_number .)
-    RPAREN          reduce using rule 37 (unary_expression -> symbol_number .)
-    COMMA           reduce using rule 37 (unary_expression -> symbol_number .)
+    TIMES           reduce using rule 38 (unary_expression -> symbol_number .)
+    MOD             reduce using rule 38 (unary_expression -> symbol_number .)
+    DIV             reduce using rule 38 (unary_expression -> symbol_number .)
+    SEMI            reduce using rule 38 (unary_expression -> symbol_number .)
+    PLUS            reduce using rule 38 (unary_expression -> symbol_number .)
+    MINUS           reduce using rule 38 (unary_expression -> symbol_number .)
+    GT              reduce using rule 38 (unary_expression -> symbol_number .)
+    GE              reduce using rule 38 (unary_expression -> symbol_number .)
+    LT              reduce using rule 38 (unary_expression -> symbol_number .)
+    LE              reduce using rule 38 (unary_expression -> symbol_number .)
+    EQ              reduce using rule 38 (unary_expression -> symbol_number .)
+    NE              reduce using rule 38 (unary_expression -> symbol_number .)
+    RPAREN          reduce using rule 38 (unary_expression -> symbol_number .)
+    COMMA           reduce using rule 38 (unary_expression -> symbol_number .)
 
 
 state 17
 
-    (38) unary_expression -> LPAREN . expression RPAREN
+    (39) unary_expression -> LPAREN . expression RPAREN
     (29) expression -> . expression PLUS factor
     (30) expression -> . expression MINUS factor
     (31) expression -> . factor
     (32) factor -> . factor TIMES unary_expression
     (33) factor -> . factor MOD unary_expression
     (34) factor -> . unary_expression
-    (35) unary_expression -> . PLUS symbol_number
-    (36) unary_expression -> . MINUS symbol_number
-    (37) unary_expression -> . symbol_number
-    (38) unary_expression -> . LPAREN expression RPAREN
-    (39) symbol_number -> . NUMBER
-    (40) symbol_number -> . ID
+    (35) factor -> . factor DIV unary_expression
+    (36) unary_expression -> . PLUS symbol_number
+    (37) unary_expression -> . MINUS symbol_number
+    (38) unary_expression -> . symbol_number
+    (39) unary_expression -> . LPAREN expression RPAREN
+    (40) symbol_number -> . NUMBER
+    (41) symbol_number -> . ID
 
     PLUS            shift and go to state 12
     MINUS           shift and go to state 14
@@ -369,28 +379,29 @@ state 17
     NUMBER          shift and go to state 18
     ID              shift and go to state 10
 
-    expression                     shift and go to state 32
+    expression                     shift and go to state 33
     factor                         shift and go to state 13
     unary_expression               shift and go to state 15
     symbol_number                  shift and go to state 16
 
 state 18
 
-    (39) symbol_number -> NUMBER .
+    (40) symbol_number -> NUMBER .
 
-    TIMES           reduce using rule 39 (symbol_number -> NUMBER .)
-    MOD             reduce using rule 39 (symbol_number -> NUMBER .)
-    SEMI            reduce using rule 39 (symbol_number -> NUMBER .)
-    PLUS            reduce using rule 39 (symbol_number -> NUMBER .)
-    MINUS           reduce using rule 39 (symbol_number -> NUMBER .)
-    GT              reduce using rule 39 (symbol_number -> NUMBER .)
-    GE              reduce using rule 39 (symbol_number -> NUMBER .)
-    LT              reduce using rule 39 (symbol_number -> NUMBER .)
-    LE              reduce using rule 39 (symbol_number -> NUMBER .)
-    EQ              reduce using rule 39 (symbol_number -> NUMBER .)
-    NE              reduce using rule 39 (symbol_number -> NUMBER .)
-    RPAREN          reduce using rule 39 (symbol_number -> NUMBER .)
-    COMMA           reduce using rule 39 (symbol_number -> NUMBER .)
+    TIMES           reduce using rule 40 (symbol_number -> NUMBER .)
+    MOD             reduce using rule 40 (symbol_number -> NUMBER .)
+    DIV             reduce using rule 40 (symbol_number -> NUMBER .)
+    SEMI            reduce using rule 40 (symbol_number -> NUMBER .)
+    PLUS            reduce using rule 40 (symbol_number -> NUMBER .)
+    MINUS           reduce using rule 40 (symbol_number -> NUMBER .)
+    GT              reduce using rule 40 (symbol_number -> NUMBER .)
+    GE              reduce using rule 40 (symbol_number -> NUMBER .)
+    LT              reduce using rule 40 (symbol_number -> NUMBER .)
+    LE              reduce using rule 40 (symbol_number -> NUMBER .)
+    EQ              reduce using rule 40 (symbol_number -> NUMBER .)
+    NE              reduce using rule 40 (symbol_number -> NUMBER .)
+    RPAREN          reduce using rule 40 (symbol_number -> NUMBER .)
+    COMMA           reduce using rule 40 (symbol_number -> NUMBER .)
 
 
 state 19
@@ -399,7 +410,7 @@ state 19
     (27) if -> IF LPAREN condition . RPAREN assignments ELSE assignments
     (28) if -> IF LPAREN condition . RPAREN assignments ELSE if
 
-    RPAREN          shift and go to state 33
+    RPAREN          shift and go to state 34
 
 
 state 20
@@ -416,27 +427,27 @@ state 20
 
     PLUS            shift and go to state 26
     MINUS           shift and go to state 27
-    GT              shift and go to state 35
-    GE              shift and go to state 36
-    LT              shift and go to state 37
-    LE              shift and go to state 38
-    EQ              shift and go to state 39
-    NE              shift and go to state 40
+    GT              shift and go to state 36
+    GE              shift and go to state 37
+    LT              shift and go to state 38
+    LE              shift and go to state 39
+    EQ              shift and go to state 40
+    NE              shift and go to state 41
 
-    cmpop                          shift and go to state 34
+    cmpop                          shift and go to state 35
 
 state 21
 
     (14) condition -> NOT . LPAREN condition RPAREN
 
-    LPAREN          shift and go to state 41
+    LPAREN          shift and go to state 42
 
 
 state 22
 
     (15) condition -> AND . LPAREN condition_list RPAREN
 
-    LPAREN          shift and go to state 42
+    LPAREN          shift and go to state 43
 
 
 state 23
@@ -451,7 +462,7 @@ state 24
 
     (17) condition -> OR . LPAREN condition_list RPAREN
 
-    LPAREN          shift and go to state 43
+    LPAREN          shift and go to state 44
 
 
 state 25
@@ -468,35 +479,13 @@ state 26
     (32) factor -> . factor TIMES unary_expression
     (33) factor -> . factor MOD unary_expression
     (34) factor -> . unary_expression
-    (35) unary_expression -> . PLUS symbol_number
-    (36) unary_expression -> . MINUS symbol_number
-    (37) unary_expression -> . symbol_number
-    (38) unary_expression -> . LPAREN expression RPAREN
-    (39) symbol_number -> . NUMBER
-    (40) symbol_number -> . ID
-
-    PLUS            shift and go to state 12
-    MINUS           shift and go to state 14
-    LPAREN          shift and go to state 17
-    NUMBER          shift and go to state 18
-    ID              shift and go to state 10
-
-    factor                         shift and go to state 44
-    unary_expression               shift and go to state 15
-    symbol_number                  shift and go to state 16
-
-state 27
-
-    (30) expression -> expression MINUS . factor
-    (32) factor -> . factor TIMES unary_expression
-    (33) factor -> . factor MOD unary_expression
-    (34) factor -> . unary_expression
-    (35) unary_expression -> . PLUS symbol_number
-    (36) unary_expression -> . MINUS symbol_number
-    (37) unary_expression -> . symbol_number
-    (38) unary_expression -> . LPAREN expression RPAREN
-    (39) symbol_number -> . NUMBER
-    (40) symbol_number -> . ID
+    (35) factor -> . factor DIV unary_expression
+    (36) unary_expression -> . PLUS symbol_number
+    (37) unary_expression -> . MINUS symbol_number
+    (38) unary_expression -> . symbol_number
+    (39) unary_expression -> . LPAREN expression RPAREN
+    (40) symbol_number -> . NUMBER
+    (41) symbol_number -> . ID
 
     PLUS            shift and go to state 12
     MINUS           shift and go to state 14
@@ -508,34 +497,19 @@ state 27
     unary_expression               shift and go to state 15
     symbol_number                  shift and go to state 16
 
-state 28
+state 27
 
-    (35) unary_expression -> PLUS symbol_number .
-
-    TIMES           reduce using rule 35 (unary_expression -> PLUS symbol_number .)
-    MOD             reduce using rule 35 (unary_expression -> PLUS symbol_number .)
-    SEMI            reduce using rule 35 (unary_expression -> PLUS symbol_number .)
-    PLUS            reduce using rule 35 (unary_expression -> PLUS symbol_number .)
-    MINUS           reduce using rule 35 (unary_expression -> PLUS symbol_number .)
-    GT              reduce using rule 35 (unary_expression -> PLUS symbol_number .)
-    GE              reduce using rule 35 (unary_expression -> PLUS symbol_number .)
-    LT              reduce using rule 35 (unary_expression -> PLUS symbol_number .)
-    LE              reduce using rule 35 (unary_expression -> PLUS symbol_number .)
-    EQ              reduce using rule 35 (unary_expression -> PLUS symbol_number .)
-    NE              reduce using rule 35 (unary_expression -> PLUS symbol_number .)
-    RPAREN          reduce using rule 35 (unary_expression -> PLUS symbol_number .)
-    COMMA           reduce using rule 35 (unary_expression -> PLUS symbol_number .)
-
-
-state 29
-
-    (32) factor -> factor TIMES . unary_expression
-    (35) unary_expression -> . PLUS symbol_number
-    (36) unary_expression -> . MINUS symbol_number
-    (37) unary_expression -> . symbol_number
-    (38) unary_expression -> . LPAREN expression RPAREN
-    (39) symbol_number -> . NUMBER
-    (40) symbol_number -> . ID
+    (30) expression -> expression MINUS . factor
+    (32) factor -> . factor TIMES unary_expression
+    (33) factor -> . factor MOD unary_expression
+    (34) factor -> . unary_expression
+    (35) factor -> . factor DIV unary_expression
+    (36) unary_expression -> . PLUS symbol_number
+    (37) unary_expression -> . MINUS symbol_number
+    (38) unary_expression -> . symbol_number
+    (39) unary_expression -> . LPAREN expression RPAREN
+    (40) symbol_number -> . NUMBER
+    (41) symbol_number -> . ID
 
     PLUS            shift and go to state 12
     MINUS           shift and go to state 14
@@ -543,18 +517,39 @@ state 29
     NUMBER          shift and go to state 18
     ID              shift and go to state 10
 
-    unary_expression               shift and go to state 46
+    factor                         shift and go to state 46
+    unary_expression               shift and go to state 15
     symbol_number                  shift and go to state 16
 
-state 30
+state 28
 
-    (33) factor -> factor MOD . unary_expression
-    (35) unary_expression -> . PLUS symbol_number
-    (36) unary_expression -> . MINUS symbol_number
-    (37) unary_expression -> . symbol_number
-    (38) unary_expression -> . LPAREN expression RPAREN
-    (39) symbol_number -> . NUMBER
-    (40) symbol_number -> . ID
+    (36) unary_expression -> PLUS symbol_number .
+
+    TIMES           reduce using rule 36 (unary_expression -> PLUS symbol_number .)
+    MOD             reduce using rule 36 (unary_expression -> PLUS symbol_number .)
+    DIV             reduce using rule 36 (unary_expression -> PLUS symbol_number .)
+    SEMI            reduce using rule 36 (unary_expression -> PLUS symbol_number .)
+    PLUS            reduce using rule 36 (unary_expression -> PLUS symbol_number .)
+    MINUS           reduce using rule 36 (unary_expression -> PLUS symbol_number .)
+    GT              reduce using rule 36 (unary_expression -> PLUS symbol_number .)
+    GE              reduce using rule 36 (unary_expression -> PLUS symbol_number .)
+    LT              reduce using rule 36 (unary_expression -> PLUS symbol_number .)
+    LE              reduce using rule 36 (unary_expression -> PLUS symbol_number .)
+    EQ              reduce using rule 36 (unary_expression -> PLUS symbol_number .)
+    NE              reduce using rule 36 (unary_expression -> PLUS symbol_number .)
+    RPAREN          reduce using rule 36 (unary_expression -> PLUS symbol_number .)
+    COMMA           reduce using rule 36 (unary_expression -> PLUS symbol_number .)
+
+
+state 29
+
+    (32) factor -> factor TIMES . unary_expression
+    (36) unary_expression -> . PLUS symbol_number
+    (37) unary_expression -> . MINUS symbol_number
+    (38) unary_expression -> . symbol_number
+    (39) unary_expression -> . LPAREN expression RPAREN
+    (40) symbol_number -> . NUMBER
+    (41) symbol_number -> . ID
 
     PLUS            shift and go to state 12
     MINUS           shift and go to state 14
@@ -565,37 +560,76 @@ state 30
     unary_expression               shift and go to state 47
     symbol_number                  shift and go to state 16
 
+state 30
+
+    (33) factor -> factor MOD . unary_expression
+    (36) unary_expression -> . PLUS symbol_number
+    (37) unary_expression -> . MINUS symbol_number
+    (38) unary_expression -> . symbol_number
+    (39) unary_expression -> . LPAREN expression RPAREN
+    (40) symbol_number -> . NUMBER
+    (41) symbol_number -> . ID
+
+    PLUS            shift and go to state 12
+    MINUS           shift and go to state 14
+    LPAREN          shift and go to state 17
+    NUMBER          shift and go to state 18
+    ID              shift and go to state 10
+
+    unary_expression               shift and go to state 48
+    symbol_number                  shift and go to state 16
+
 state 31
 
-    (36) unary_expression -> MINUS symbol_number .
+    (35) factor -> factor DIV . unary_expression
+    (36) unary_expression -> . PLUS symbol_number
+    (37) unary_expression -> . MINUS symbol_number
+    (38) unary_expression -> . symbol_number
+    (39) unary_expression -> . LPAREN expression RPAREN
+    (40) symbol_number -> . NUMBER
+    (41) symbol_number -> . ID
 
-    TIMES           reduce using rule 36 (unary_expression -> MINUS symbol_number .)
-    MOD             reduce using rule 36 (unary_expression -> MINUS symbol_number .)
-    SEMI            reduce using rule 36 (unary_expression -> MINUS symbol_number .)
-    PLUS            reduce using rule 36 (unary_expression -> MINUS symbol_number .)
-    MINUS           reduce using rule 36 (unary_expression -> MINUS symbol_number .)
-    GT              reduce using rule 36 (unary_expression -> MINUS symbol_number .)
-    GE              reduce using rule 36 (unary_expression -> MINUS symbol_number .)
-    LT              reduce using rule 36 (unary_expression -> MINUS symbol_number .)
-    LE              reduce using rule 36 (unary_expression -> MINUS symbol_number .)
-    EQ              reduce using rule 36 (unary_expression -> MINUS symbol_number .)
-    NE              reduce using rule 36 (unary_expression -> MINUS symbol_number .)
-    RPAREN          reduce using rule 36 (unary_expression -> MINUS symbol_number .)
-    COMMA           reduce using rule 36 (unary_expression -> MINUS symbol_number .)
+    PLUS            shift and go to state 12
+    MINUS           shift and go to state 14
+    LPAREN          shift and go to state 17
+    NUMBER          shift and go to state 18
+    ID              shift and go to state 10
 
+    unary_expression               shift and go to state 49
+    symbol_number                  shift and go to state 16
 
 state 32
 
-    (38) unary_expression -> LPAREN expression . RPAREN
+    (37) unary_expression -> MINUS symbol_number .
+
+    TIMES           reduce using rule 37 (unary_expression -> MINUS symbol_number .)
+    MOD             reduce using rule 37 (unary_expression -> MINUS symbol_number .)
+    DIV             reduce using rule 37 (unary_expression -> MINUS symbol_number .)
+    SEMI            reduce using rule 37 (unary_expression -> MINUS symbol_number .)
+    PLUS            reduce using rule 37 (unary_expression -> MINUS symbol_number .)
+    MINUS           reduce using rule 37 (unary_expression -> MINUS symbol_number .)
+    GT              reduce using rule 37 (unary_expression -> MINUS symbol_number .)
+    GE              reduce using rule 37 (unary_expression -> MINUS symbol_number .)
+    LT              reduce using rule 37 (unary_expression -> MINUS symbol_number .)
+    LE              reduce using rule 37 (unary_expression -> MINUS symbol_number .)
+    EQ              reduce using rule 37 (unary_expression -> MINUS symbol_number .)
+    NE              reduce using rule 37 (unary_expression -> MINUS symbol_number .)
+    RPAREN          reduce using rule 37 (unary_expression -> MINUS symbol_number .)
+    COMMA           reduce using rule 37 (unary_expression -> MINUS symbol_number .)
+
+
+state 33
+
+    (39) unary_expression -> LPAREN expression . RPAREN
     (29) expression -> expression . PLUS factor
     (30) expression -> expression . MINUS factor
 
-    RPAREN          shift and go to state 48
+    RPAREN          shift and go to state 50
     PLUS            shift and go to state 26
     MINUS           shift and go to state 27
 
 
-state 33
+state 34
 
     (26) if -> IF LPAREN condition RPAREN . assignments
     (27) if -> IF LPAREN condition RPAREN . assignments ELSE assignments
@@ -609,15 +643,15 @@ state 33
     (11) assignment -> . ID PE NUMBER SEMI
     (12) assignment -> . ID ME NUMBER SEMI
 
-    LBRACE          shift and go to state 51
+    LBRACE          shift and go to state 53
     ELSE            reduce using rule 7 (assignments -> .)
     $end            reduce using rule 7 (assignments -> .)
-    ID              shift and go to state 52
+    ID              shift and go to state 54
 
-    assignments                    shift and go to state 49
-    assignment                     shift and go to state 50
+    assignments                    shift and go to state 51
+    assignment                     shift and go to state 52
 
-state 34
+state 35
 
     (13) condition -> expression cmpop . expression
     (29) expression -> . expression PLUS factor
@@ -626,12 +660,13 @@ state 34
     (32) factor -> . factor TIMES unary_expression
     (33) factor -> . factor MOD unary_expression
     (34) factor -> . unary_expression
-    (35) unary_expression -> . PLUS symbol_number
-    (36) unary_expression -> . MINUS symbol_number
-    (37) unary_expression -> . symbol_number
-    (38) unary_expression -> . LPAREN expression RPAREN
-    (39) symbol_number -> . NUMBER
-    (40) symbol_number -> . ID
+    (35) factor -> . factor DIV unary_expression
+    (36) unary_expression -> . PLUS symbol_number
+    (37) unary_expression -> . MINUS symbol_number
+    (38) unary_expression -> . symbol_number
+    (39) unary_expression -> . LPAREN expression RPAREN
+    (40) symbol_number -> . NUMBER
+    (41) symbol_number -> . ID
 
     PLUS            shift and go to state 12
     MINUS           shift and go to state 14
@@ -639,12 +674,12 @@ state 34
     NUMBER          shift and go to state 18
     ID              shift and go to state 10
 
-    expression                     shift and go to state 53
+    expression                     shift and go to state 55
     factor                         shift and go to state 13
     unary_expression               shift and go to state 15
     symbol_number                  shift and go to state 16
 
-state 35
+state 36
 
     (20) cmpop -> GT .
 
@@ -655,7 +690,7 @@ state 35
     ID              reduce using rule 20 (cmpop -> GT .)
 
 
-state 36
+state 37
 
     (21) cmpop -> GE .
 
@@ -666,7 +701,7 @@ state 36
     ID              reduce using rule 21 (cmpop -> GE .)
 
 
-state 37
+state 38
 
     (22) cmpop -> LT .
 
@@ -677,7 +712,7 @@ state 37
     ID              reduce using rule 22 (cmpop -> LT .)
 
 
-state 38
+state 39
 
     (23) cmpop -> LE .
 
@@ -688,7 +723,7 @@ state 38
     ID              reduce using rule 23 (cmpop -> LE .)
 
 
-state 39
+state 40
 
     (24) cmpop -> EQ .
 
@@ -699,7 +734,7 @@ state 39
     ID              reduce using rule 24 (cmpop -> EQ .)
 
 
-state 40
+state 41
 
     (25) cmpop -> NE .
 
@@ -710,7 +745,7 @@ state 40
     ID              reduce using rule 25 (cmpop -> NE .)
 
 
-state 41
+state 42
 
     (14) condition -> NOT LPAREN . condition RPAREN
     (13) condition -> . expression cmpop expression
@@ -724,12 +759,13 @@ state 41
     (32) factor -> . factor TIMES unary_expression
     (33) factor -> . factor MOD unary_expression
     (34) factor -> . unary_expression
-    (35) unary_expression -> . PLUS symbol_number
-    (36) unary_expression -> . MINUS symbol_number
-    (37) unary_expression -> . symbol_number
-    (38) unary_expression -> . LPAREN expression RPAREN
-    (39) symbol_number -> . NUMBER
-    (40) symbol_number -> . ID
+    (35) factor -> . factor DIV unary_expression
+    (36) unary_expression -> . PLUS symbol_number
+    (37) unary_expression -> . MINUS symbol_number
+    (38) unary_expression -> . symbol_number
+    (39) unary_expression -> . LPAREN expression RPAREN
+    (40) symbol_number -> . NUMBER
+    (41) symbol_number -> . ID
 
     NOT             shift and go to state 21
     AND             shift and go to state 22
@@ -741,13 +777,13 @@ state 41
     NUMBER          shift and go to state 18
     ID              shift and go to state 10
 
-    condition                      shift and go to state 54
+    condition                      shift and go to state 56
     expression                     shift and go to state 20
     factor                         shift and go to state 13
     unary_expression               shift and go to state 15
     symbol_number                  shift and go to state 16
 
-state 42
+state 43
 
     (15) condition -> AND LPAREN . condition_list RPAREN
     (18) condition_list -> . condition COMMA condition_list
@@ -763,12 +799,13 @@ state 42
     (32) factor -> . factor TIMES unary_expression
     (33) factor -> . factor MOD unary_expression
     (34) factor -> . unary_expression
-    (35) unary_expression -> . PLUS symbol_number
-    (36) unary_expression -> . MINUS symbol_number
-    (37) unary_expression -> . symbol_number
-    (38) unary_expression -> . LPAREN expression RPAREN
-    (39) symbol_number -> . NUMBER
-    (40) symbol_number -> . ID
+    (35) factor -> . factor DIV unary_expression
+    (36) unary_expression -> . PLUS symbol_number
+    (37) unary_expression -> . MINUS symbol_number
+    (38) unary_expression -> . symbol_number
+    (39) unary_expression -> . LPAREN expression RPAREN
+    (40) symbol_number -> . NUMBER
+    (41) symbol_number -> . ID
 
     NOT             shift and go to state 21
     AND             shift and go to state 22
@@ -780,14 +817,14 @@ state 42
     NUMBER          shift and go to state 18
     ID              shift and go to state 10
 
-    condition_list                 shift and go to state 55
-    condition                      shift and go to state 56
+    condition_list                 shift and go to state 57
+    condition                      shift and go to state 58
     expression                     shift and go to state 20
     factor                         shift and go to state 13
     unary_expression               shift and go to state 15
     symbol_number                  shift and go to state 16
 
-state 43
+state 44
 
     (17) condition -> OR LPAREN . condition_list RPAREN
     (18) condition_list -> . condition COMMA condition_list
@@ -803,12 +840,13 @@ state 43
     (32) factor -> . factor TIMES unary_expression
     (33) factor -> . factor MOD unary_expression
     (34) factor -> . unary_expression
-    (35) unary_expression -> . PLUS symbol_number
-    (36) unary_expression -> . MINUS symbol_number
-    (37) unary_expression -> . symbol_number
-    (38) unary_expression -> . LPAREN expression RPAREN
-    (39) symbol_number -> . NUMBER
-    (40) symbol_number -> . ID
+    (35) factor -> . factor DIV unary_expression
+    (36) unary_expression -> . PLUS symbol_number
+    (37) unary_expression -> . MINUS symbol_number
+    (38) unary_expression -> . symbol_number
+    (39) unary_expression -> . LPAREN expression RPAREN
+    (40) symbol_number -> . NUMBER
+    (41) symbol_number -> . ID
 
     NOT             shift and go to state 21
     AND             shift and go to state 22
@@ -820,18 +858,19 @@ state 43
     NUMBER          shift and go to state 18
     ID              shift and go to state 10
 
-    condition_list                 shift and go to state 57
-    condition                      shift and go to state 56
+    condition_list                 shift and go to state 59
+    condition                      shift and go to state 58
     expression                     shift and go to state 20
     factor                         shift and go to state 13
     unary_expression               shift and go to state 15
     symbol_number                  shift and go to state 16
 
-state 44
+state 45
 
     (29) expression -> expression PLUS factor .
     (32) factor -> factor . TIMES unary_expression
     (33) factor -> factor . MOD unary_expression
+    (35) factor -> factor . DIV unary_expression
 
     SEMI            reduce using rule 29 (expression -> expression PLUS factor .)
     PLUS            reduce using rule 29 (expression -> expression PLUS factor .)
@@ -846,13 +885,15 @@ state 44
     COMMA           reduce using rule 29 (expression -> expression PLUS factor .)
     TIMES           shift and go to state 29
     MOD             shift and go to state 30
+    DIV             shift and go to state 31
 
 
-state 45
+state 46
 
     (30) expression -> expression MINUS factor .
     (32) factor -> factor . TIMES unary_expression
     (33) factor -> factor . MOD unary_expression
+    (35) factor -> factor . DIV unary_expression
 
     SEMI            reduce using rule 30 (expression -> expression MINUS factor .)
     PLUS            reduce using rule 30 (expression -> expression MINUS factor .)
@@ -867,14 +908,16 @@ state 45
     COMMA           reduce using rule 30 (expression -> expression MINUS factor .)
     TIMES           shift and go to state 29
     MOD             shift and go to state 30
+    DIV             shift and go to state 31
 
 
-state 46
+state 47
 
     (32) factor -> factor TIMES unary_expression .
 
     TIMES           reduce using rule 32 (factor -> factor TIMES unary_expression .)
     MOD             reduce using rule 32 (factor -> factor TIMES unary_expression .)
+    DIV             reduce using rule 32 (factor -> factor TIMES unary_expression .)
     SEMI            reduce using rule 32 (factor -> factor TIMES unary_expression .)
     PLUS            reduce using rule 32 (factor -> factor TIMES unary_expression .)
     MINUS           reduce using rule 32 (factor -> factor TIMES unary_expression .)
@@ -888,12 +931,13 @@ state 46
     COMMA           reduce using rule 32 (factor -> factor TIMES unary_expression .)
 
 
-state 47
+state 48
 
     (33) factor -> factor MOD unary_expression .
 
     TIMES           reduce using rule 33 (factor -> factor MOD unary_expression .)
     MOD             reduce using rule 33 (factor -> factor MOD unary_expression .)
+    DIV             reduce using rule 33 (factor -> factor MOD unary_expression .)
     SEMI            reduce using rule 33 (factor -> factor MOD unary_expression .)
     PLUS            reduce using rule 33 (factor -> factor MOD unary_expression .)
     MINUS           reduce using rule 33 (factor -> factor MOD unary_expression .)
@@ -907,36 +951,57 @@ state 47
     COMMA           reduce using rule 33 (factor -> factor MOD unary_expression .)
 
 
-state 48
-
-    (38) unary_expression -> LPAREN expression RPAREN .
-
-    TIMES           reduce using rule 38 (unary_expression -> LPAREN expression RPAREN .)
-    MOD             reduce using rule 38 (unary_expression -> LPAREN expression RPAREN .)
-    SEMI            reduce using rule 38 (unary_expression -> LPAREN expression RPAREN .)
-    PLUS            reduce using rule 38 (unary_expression -> LPAREN expression RPAREN .)
-    MINUS           reduce using rule 38 (unary_expression -> LPAREN expression RPAREN .)
-    GT              reduce using rule 38 (unary_expression -> LPAREN expression RPAREN .)
-    GE              reduce using rule 38 (unary_expression -> LPAREN expression RPAREN .)
-    LT              reduce using rule 38 (unary_expression -> LPAREN expression RPAREN .)
-    LE              reduce using rule 38 (unary_expression -> LPAREN expression RPAREN .)
-    EQ              reduce using rule 38 (unary_expression -> LPAREN expression RPAREN .)
-    NE              reduce using rule 38 (unary_expression -> LPAREN expression RPAREN .)
-    RPAREN          reduce using rule 38 (unary_expression -> LPAREN expression RPAREN .)
-    COMMA           reduce using rule 38 (unary_expression -> LPAREN expression RPAREN .)
-
-
 state 49
+
+    (35) factor -> factor DIV unary_expression .
+
+    TIMES           reduce using rule 35 (factor -> factor DIV unary_expression .)
+    MOD             reduce using rule 35 (factor -> factor DIV unary_expression .)
+    DIV             reduce using rule 35 (factor -> factor DIV unary_expression .)
+    SEMI            reduce using rule 35 (factor -> factor DIV unary_expression .)
+    PLUS            reduce using rule 35 (factor -> factor DIV unary_expression .)
+    MINUS           reduce using rule 35 (factor -> factor DIV unary_expression .)
+    GT              reduce using rule 35 (factor -> factor DIV unary_expression .)
+    GE              reduce using rule 35 (factor -> factor DIV unary_expression .)
+    LT              reduce using rule 35 (factor -> factor DIV unary_expression .)
+    LE              reduce using rule 35 (factor -> factor DIV unary_expression .)
+    EQ              reduce using rule 35 (factor -> factor DIV unary_expression .)
+    NE              reduce using rule 35 (factor -> factor DIV unary_expression .)
+    RPAREN          reduce using rule 35 (factor -> factor DIV unary_expression .)
+    COMMA           reduce using rule 35 (factor -> factor DIV unary_expression .)
+
+
+state 50
+
+    (39) unary_expression -> LPAREN expression RPAREN .
+
+    TIMES           reduce using rule 39 (unary_expression -> LPAREN expression RPAREN .)
+    MOD             reduce using rule 39 (unary_expression -> LPAREN expression RPAREN .)
+    DIV             reduce using rule 39 (unary_expression -> LPAREN expression RPAREN .)
+    SEMI            reduce using rule 39 (unary_expression -> LPAREN expression RPAREN .)
+    PLUS            reduce using rule 39 (unary_expression -> LPAREN expression RPAREN .)
+    MINUS           reduce using rule 39 (unary_expression -> LPAREN expression RPAREN .)
+    GT              reduce using rule 39 (unary_expression -> LPAREN expression RPAREN .)
+    GE              reduce using rule 39 (unary_expression -> LPAREN expression RPAREN .)
+    LT              reduce using rule 39 (unary_expression -> LPAREN expression RPAREN .)
+    LE              reduce using rule 39 (unary_expression -> LPAREN expression RPAREN .)
+    EQ              reduce using rule 39 (unary_expression -> LPAREN expression RPAREN .)
+    NE              reduce using rule 39 (unary_expression -> LPAREN expression RPAREN .)
+    RPAREN          reduce using rule 39 (unary_expression -> LPAREN expression RPAREN .)
+    COMMA           reduce using rule 39 (unary_expression -> LPAREN expression RPAREN .)
+
+
+state 51
 
     (26) if -> IF LPAREN condition RPAREN assignments .
     (27) if -> IF LPAREN condition RPAREN assignments . ELSE assignments
     (28) if -> IF LPAREN condition RPAREN assignments . ELSE if
 
     $end            reduce using rule 26 (if -> IF LPAREN condition RPAREN assignments .)
-    ELSE            shift and go to state 58
+    ELSE            shift and go to state 60
 
 
-state 50
+state 52
 
     (5) assignments -> assignment . assignments
     (5) assignments -> . assignment assignments
@@ -948,16 +1013,16 @@ state 50
     (11) assignment -> . ID PE NUMBER SEMI
     (12) assignment -> . ID ME NUMBER SEMI
 
-    LBRACE          shift and go to state 51
+    LBRACE          shift and go to state 53
     ELSE            reduce using rule 7 (assignments -> .)
     $end            reduce using rule 7 (assignments -> .)
     RBRACE          reduce using rule 7 (assignments -> .)
-    ID              shift and go to state 52
+    ID              shift and go to state 54
 
-    assignment                     shift and go to state 50
-    assignments                    shift and go to state 59
+    assignment                     shift and go to state 52
+    assignments                    shift and go to state 61
 
-state 51
+state 53
 
     (6) assignments -> LBRACE . assignments RBRACE
     (5) assignments -> . assignment assignments
@@ -969,14 +1034,14 @@ state 51
     (11) assignment -> . ID PE NUMBER SEMI
     (12) assignment -> . ID ME NUMBER SEMI
 
-    LBRACE          shift and go to state 51
+    LBRACE          shift and go to state 53
     RBRACE          reduce using rule 7 (assignments -> .)
-    ID              shift and go to state 52
+    ID              shift and go to state 54
 
-    assignments                    shift and go to state 60
-    assignment                     shift and go to state 50
+    assignments                    shift and go to state 62
+    assignment                     shift and go to state 52
 
-state 52
+state 54
 
     (8) assignment -> ID . ASSIGN expression SEMI
     (9) assignment -> ID . INCRE SEMI
@@ -984,14 +1049,14 @@ state 52
     (11) assignment -> ID . PE NUMBER SEMI
     (12) assignment -> ID . ME NUMBER SEMI
 
-    ASSIGN          shift and go to state 61
-    INCRE           shift and go to state 62
-    DECRE           shift and go to state 63
-    PE              shift and go to state 64
-    ME              shift and go to state 65
+    ASSIGN          shift and go to state 63
+    INCRE           shift and go to state 64
+    DECRE           shift and go to state 65
+    PE              shift and go to state 66
+    ME              shift and go to state 67
 
 
-state 53
+state 55
 
     (13) condition -> expression cmpop expression .
     (29) expression -> expression . PLUS factor
@@ -1003,37 +1068,37 @@ state 53
     MINUS           shift and go to state 27
 
 
-state 54
+state 56
 
     (14) condition -> NOT LPAREN condition . RPAREN
 
-    RPAREN          shift and go to state 66
-
-
-state 55
-
-    (15) condition -> AND LPAREN condition_list . RPAREN
-
-    RPAREN          shift and go to state 67
-
-
-state 56
-
-    (18) condition_list -> condition . COMMA condition_list
-    (19) condition_list -> condition .
-
-    COMMA           shift and go to state 68
-    RPAREN          reduce using rule 19 (condition_list -> condition .)
+    RPAREN          shift and go to state 68
 
 
 state 57
 
-    (17) condition -> OR LPAREN condition_list . RPAREN
+    (15) condition -> AND LPAREN condition_list . RPAREN
 
     RPAREN          shift and go to state 69
 
 
 state 58
+
+    (18) condition_list -> condition . COMMA condition_list
+    (19) condition_list -> condition .
+
+    COMMA           shift and go to state 70
+    RPAREN          reduce using rule 19 (condition_list -> condition .)
+
+
+state 59
+
+    (17) condition -> OR LPAREN condition_list . RPAREN
+
+    RPAREN          shift and go to state 71
+
+
+state 60
 
     (27) if -> IF LPAREN condition RPAREN assignments ELSE . assignments
     (28) if -> IF LPAREN condition RPAREN assignments ELSE . if
@@ -1049,16 +1114,16 @@ state 58
     (11) assignment -> . ID PE NUMBER SEMI
     (12) assignment -> . ID ME NUMBER SEMI
 
-    LBRACE          shift and go to state 51
+    LBRACE          shift and go to state 53
     $end            reduce using rule 7 (assignments -> .)
     IF              shift and go to state 6
-    ID              shift and go to state 52
+    ID              shift and go to state 54
 
-    assignments                    shift and go to state 70
-    if                             shift and go to state 71
-    assignment                     shift and go to state 50
+    assignments                    shift and go to state 72
+    if                             shift and go to state 73
+    assignment                     shift and go to state 52
 
-state 59
+state 61
 
     (5) assignments -> assignment assignments .
 
@@ -1067,14 +1132,14 @@ state 59
     RBRACE          reduce using rule 5 (assignments -> assignment assignments .)
 
 
-state 60
+state 62
 
     (6) assignments -> LBRACE assignments . RBRACE
 
-    RBRACE          shift and go to state 72
+    RBRACE          shift and go to state 74
 
 
-state 61
+state 63
 
     (8) assignment -> ID ASSIGN . expression SEMI
     (29) expression -> . expression PLUS factor
@@ -1083,12 +1148,13 @@ state 61
     (32) factor -> . factor TIMES unary_expression
     (33) factor -> . factor MOD unary_expression
     (34) factor -> . unary_expression
-    (35) unary_expression -> . PLUS symbol_number
-    (36) unary_expression -> . MINUS symbol_number
-    (37) unary_expression -> . symbol_number
-    (38) unary_expression -> . LPAREN expression RPAREN
-    (39) symbol_number -> . NUMBER
-    (40) symbol_number -> . ID
+    (35) factor -> . factor DIV unary_expression
+    (36) unary_expression -> . PLUS symbol_number
+    (37) unary_expression -> . MINUS symbol_number
+    (38) unary_expression -> . symbol_number
+    (39) unary_expression -> . LPAREN expression RPAREN
+    (40) symbol_number -> . NUMBER
+    (41) symbol_number -> . ID
 
     PLUS            shift and go to state 12
     MINUS           shift and go to state 14
@@ -1096,40 +1162,40 @@ state 61
     NUMBER          shift and go to state 18
     ID              shift and go to state 10
 
-    expression                     shift and go to state 73
+    expression                     shift and go to state 75
     factor                         shift and go to state 13
     unary_expression               shift and go to state 15
     symbol_number                  shift and go to state 16
 
-state 62
+state 64
 
     (9) assignment -> ID INCRE . SEMI
 
-    SEMI            shift and go to state 74
-
-
-state 63
-
-    (10) assignment -> ID DECRE . SEMI
-
-    SEMI            shift and go to state 75
-
-
-state 64
-
-    (11) assignment -> ID PE . NUMBER SEMI
-
-    NUMBER          shift and go to state 76
+    SEMI            shift and go to state 76
 
 
 state 65
 
-    (12) assignment -> ID ME . NUMBER SEMI
+    (10) assignment -> ID DECRE . SEMI
 
-    NUMBER          shift and go to state 77
+    SEMI            shift and go to state 77
 
 
 state 66
+
+    (11) assignment -> ID PE . NUMBER SEMI
+
+    NUMBER          shift and go to state 78
+
+
+state 67
+
+    (12) assignment -> ID ME . NUMBER SEMI
+
+    NUMBER          shift and go to state 79
+
+
+state 68
 
     (14) condition -> NOT LPAREN condition RPAREN .
 
@@ -1137,7 +1203,7 @@ state 66
     COMMA           reduce using rule 14 (condition -> NOT LPAREN condition RPAREN .)
 
 
-state 67
+state 69
 
     (15) condition -> AND LPAREN condition_list RPAREN .
 
@@ -1145,7 +1211,7 @@ state 67
     COMMA           reduce using rule 15 (condition -> AND LPAREN condition_list RPAREN .)
 
 
-state 68
+state 70
 
     (18) condition_list -> condition COMMA . condition_list
     (18) condition_list -> . condition COMMA condition_list
@@ -1161,12 +1227,13 @@ state 68
     (32) factor -> . factor TIMES unary_expression
     (33) factor -> . factor MOD unary_expression
     (34) factor -> . unary_expression
-    (35) unary_expression -> . PLUS symbol_number
-    (36) unary_expression -> . MINUS symbol_number
-    (37) unary_expression -> . symbol_number
-    (38) unary_expression -> . LPAREN expression RPAREN
-    (39) symbol_number -> . NUMBER
-    (40) symbol_number -> . ID
+    (35) factor -> . factor DIV unary_expression
+    (36) unary_expression -> . PLUS symbol_number
+    (37) unary_expression -> . MINUS symbol_number
+    (38) unary_expression -> . symbol_number
+    (39) unary_expression -> . LPAREN expression RPAREN
+    (40) symbol_number -> . NUMBER
+    (41) symbol_number -> . ID
 
     NOT             shift and go to state 21
     AND             shift and go to state 22
@@ -1178,14 +1245,14 @@ state 68
     NUMBER          shift and go to state 18
     ID              shift and go to state 10
 
-    condition                      shift and go to state 56
-    condition_list                 shift and go to state 78
+    condition                      shift and go to state 58
+    condition_list                 shift and go to state 80
     expression                     shift and go to state 20
     factor                         shift and go to state 13
     unary_expression               shift and go to state 15
     symbol_number                  shift and go to state 16
 
-state 69
+state 71
 
     (17) condition -> OR LPAREN condition_list RPAREN .
 
@@ -1193,21 +1260,21 @@ state 69
     COMMA           reduce using rule 17 (condition -> OR LPAREN condition_list RPAREN .)
 
 
-state 70
+state 72
 
     (27) if -> IF LPAREN condition RPAREN assignments ELSE assignments .
 
     $end            reduce using rule 27 (if -> IF LPAREN condition RPAREN assignments ELSE assignments .)
 
 
-state 71
+state 73
 
     (28) if -> IF LPAREN condition RPAREN assignments ELSE if .
 
     $end            reduce using rule 28 (if -> IF LPAREN condition RPAREN assignments ELSE if .)
 
 
-state 72
+state 74
 
     (6) assignments -> LBRACE assignments RBRACE .
 
@@ -1216,18 +1283,18 @@ state 72
     RBRACE          reduce using rule 6 (assignments -> LBRACE assignments RBRACE .)
 
 
-state 73
+state 75
 
     (8) assignment -> ID ASSIGN expression . SEMI
     (29) expression -> expression . PLUS factor
     (30) expression -> expression . MINUS factor
 
-    SEMI            shift and go to state 79
+    SEMI            shift and go to state 81
     PLUS            shift and go to state 26
     MINUS           shift and go to state 27
 
 
-state 74
+state 76
 
     (9) assignment -> ID INCRE SEMI .
 
@@ -1238,7 +1305,7 @@ state 74
     RBRACE          reduce using rule 9 (assignment -> ID INCRE SEMI .)
 
 
-state 75
+state 77
 
     (10) assignment -> ID DECRE SEMI .
 
@@ -1249,28 +1316,28 @@ state 75
     RBRACE          reduce using rule 10 (assignment -> ID DECRE SEMI .)
 
 
-state 76
+state 78
 
     (11) assignment -> ID PE NUMBER . SEMI
 
-    SEMI            shift and go to state 80
+    SEMI            shift and go to state 82
 
 
-state 77
+state 79
 
     (12) assignment -> ID ME NUMBER . SEMI
 
-    SEMI            shift and go to state 81
+    SEMI            shift and go to state 83
 
 
-state 78
+state 80
 
     (18) condition_list -> condition COMMA condition_list .
 
     RPAREN          reduce using rule 18 (condition_list -> condition COMMA condition_list .)
 
 
-state 79
+state 81
 
     (8) assignment -> ID ASSIGN expression SEMI .
 
@@ -1281,7 +1348,7 @@ state 79
     RBRACE          reduce using rule 8 (assignment -> ID ASSIGN expression SEMI .)
 
 
-state 80
+state 82
 
     (11) assignment -> ID PE NUMBER SEMI .
 
@@ -1292,7 +1359,7 @@ state 80
     RBRACE          reduce using rule 11 (assignment -> ID PE NUMBER SEMI .)
 
 
-state 81
+state 83
 
     (12) assignment -> ID ME NUMBER SEMI .
 

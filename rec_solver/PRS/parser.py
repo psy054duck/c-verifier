@@ -310,16 +310,33 @@ def p_expression(p):
     elif p[2] == '-':
         p[0] = p[1] - p[3]
 
-def p_factor(p):
-    '''factor : factor TIMES unary_expression
-              | factor MOD unary_expression
-              | unary_expression'''
-    if len(p) == 2:
-        p[0] = p[1]
-    elif p[2] == '*':
-        p[0] = p[1] * p[3]
-    else:
-        p[0] = p[1] % p[3]
+# def p_factor(p):
+#     '''factor : factor TIMES unary_expression
+#               | factor MOD unary_expression
+#               | unary_expression'''
+#     if len(p) == 2:
+#         p[0] = p[1]
+#     elif p[2] == '*':
+#         p[0] = p[1] * p[3]
+#     else:
+#         p[0] = p[1] % p[3]
+
+def p_factor1(p):
+    '''factor : factor TIMES unary_expression'''
+    p[0] = p[1]*p[3]
+
+def p_factor2(p):
+    '''factor : factor MOD unary_expression'''
+    p[0] = p[1] % p[3]
+
+def p_factor3(p):
+    '''factor : unary_expression'''
+    p[0] = p[1]
+
+def p_factor4(p):
+    '''factor : factor DIV unary_expression'''
+    p[0] = p[1] / p[3]
+
 
 def p_unary_expression_1(p):
     '''unary_expression : PLUS symbol_number

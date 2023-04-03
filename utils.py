@@ -130,8 +130,8 @@ def pull_ite(expr):
         expr = reduce(lambda x, y: x*y, expr.children())
     children = expr.children()
     lhs, rhs = children
-    op = lambda x, y: x + y if z3.is_add(expr) else x - y if z3.is_sub(expr) else x * y
-    if z3.is_add(expr) or z3.is_sub(expr) or z3.is_mul(expr):
+    op = lambda x, y: x + y if z3.is_add(expr) else x - y if z3.is_sub(expr) else x * y if z3.is_mul(expr) else x/y
+    if z3.is_add(expr) or z3.is_sub(expr) or z3.is_mul(expr) or z3.is_idiv(expr):
         lhs, rhs = pull_ite(children[0]), pull_ite(children[1])
         if _is_if(lhs) and not _is_if(rhs):
             cond, t, f = lhs.children()
@@ -212,6 +212,9 @@ def to_sympy(expr):
     elif z3.is_eq(expr):
         children = expr.children()
         res = sp.Eq(to_sympy(children[0]), to_sympy(children[1]))
+    elif z3.is_distinct(expr):
+        children = expr.children()
+        res = sp.Ne(to_sympy(children[0]), to_sympy(children[1]))
     elif z3.is_not(expr):
         children = expr.children()
         res = sp.Not(to_sympy(children[0]))

@@ -116,7 +116,7 @@ class C2Z3Visitor(c_ast.NodeVisitor):
             for var in self.main_visitor.uint_vars:
                 s.add(var >= 0)
             for cons in N_constraints:
-                if over_approx and z3.is_quantifier(cons): continue
+                if over_approx and z3.is_quantifier(cons) and not self.main_visitor.is_overapproximate: continue
                 s.add(cons)
                 # print(repr(simplified))
             for i in range(N_index):
@@ -373,8 +373,9 @@ class MainVisitor(c_ast.NodeVisitor):
                 self.cached_N_constraints.append(z3.ForAll(index, z3.Implies(z3.And(0 <= index, index < N), translated_cond)))
             # sub_pairs_sp = {sp.Symbol(str(v)): sp.Symbol('uuuuu%d' % i, integer=True) for i, v in enumerate(self.cur_values)}
             # print(ret)
-            # self.cached_N_constraints.append(z3.Not(cond))
+            self.cached_N_constraints.append(z3.Not(utils.my_substitute(cond, [(v, e) for v, e in ret.items()])))
             for expr, closed in res:
+                # self.cached_N_constraints.append(utils.to_z3(sp.Eq(expr, closed)))
                 # self.cached_N_constraints.append(utils.my_substitute(utils.to_z3(sp.Eq(expr.subs(sub_pairs_sp), closed)), [(index, N)]))
                 self.cached_N_constraints.append(utils.my_substitute(utils.my_substitute(utils.to_z3(expr), [(v, e) for v, e in ret.items()]) == utils.to_z3(closed), [(index, N)]))
             self.N_index += 1
@@ -508,7 +509,8 @@ class MainVisitor(c_ast.NodeVisitor):
                 self.conditions.append(False)
             self._update_cached_assertion(self.symbol_values)
             self._update_cached_conditions(self.symbol_values)
-            self._update_cached_N_constraints(self.symbol_values)
+            if not self.is_overapproximate:
+                self._update_cached_N_constraints(self.symbol_values)
             self._sync_conditions()
             self._sync_assertions()
             self._sync_N_constraints()
