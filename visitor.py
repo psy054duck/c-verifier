@@ -108,7 +108,7 @@ class C2Z3Visitor(c_ast.NodeVisitor):
         solver = z3.Solver()
         res = None
         from z3 import And, Or, If, Implies, Not, Real, ForAll, ToReal
-        for over_approx in [False, True]:
+        for over_approx in [False or self.main_visitor.is_overapproximate, True]:
             s = set()
             n = z3.Int('n')
             z3variables = {str(var): z3.Int(str(var)) for var in z3vars}
@@ -198,6 +198,7 @@ class MainVisitor(c_ast.NodeVisitor):
         self.unknown = 0
         self.variables_loop = set()
         self.uint_vars = set()
+        self.is_overapproximate = False
 
     def reset_counters(self):
         self.tmp_index = 0
@@ -358,12 +359,24 @@ class MainVisitor(c_ast.NodeVisitor):
             self.N_index += 1
             ret = {var: z3.substitute(closed, (index, N)) for var, closed in res.items()}
         else:
-            ret = {v: z3.Int('uuuuu%d' % i) for i, v in enumerate(self.cur_values)}
-            sub_pairs_sp = {sp.Symbol(str(v)): sp.Symbol('uuuuu%d' % i, integer=True) for i, v in enumerate(self.cur_values)}
+            self.is_overapproximate = True
+            expr_closed = {e: closed for e, closed in res}
+            index = z3.Int('n')
             N = z3.Int('N%d' % self.N_index)
-            self.cached_N_constraints.append(z3.Not(cond))
+            # ret = {v: z3.Int('uuuuu%d' % i) if utils.to_sympy(v) not in expr_closed else utils.my_substitute(utils.to_z3(expr_closed[utils.to_sympy(v)]), [(index, N)]) for i, v in enumerate(self.cur_values)}
+            ret = {v: z3.If(N == 0, expr, z3.Int('uuuuu%d' % i)) if utils.to_sympy(v) not in expr_closed else utils.my_substitute(utils.to_z3(expr_closed[utils.to_sympy(v)]), [(index, N)]) for i, (v, expr) in enumerate(self.cur_values.items())}
+            sp_cond = utils.to_sympy(cond)
+            if all(s in expr_closed for s in sp_cond.free_symbols):
+                mapping = [(utils.to_z3(expr), utils.to_z3(closed)) for expr, closed in res]
+                translated_cond = utils.my_substitute(cond, mapping)
+                self.cached_N_constraints.append(utils.my_substitute(z3.Not(translated_cond), [(index, N)]))
+                self.cached_N_constraints.append(z3.ForAll(index, z3.Implies(z3.And(0 <= index, index < N), translated_cond)))
+            # sub_pairs_sp = {sp.Symbol(str(v)): sp.Symbol('uuuuu%d' % i, integer=True) for i, v in enumerate(self.cur_values)}
+            # print(ret)
+            # self.cached_N_constraints.append(z3.Not(cond))
             for expr, closed in res:
-                self.cached_N_constraints.append(utils.to_z3(sp.Eq(expr.subs(sub_pairs_sp), closed)))
+                # self.cached_N_constraints.append(utils.my_substitute(utils.to_z3(sp.Eq(expr.subs(sub_pairs_sp), closed)), [(index, N)]))
+                self.cached_N_constraints.append(utils.my_substitute(utils.my_substitute(utils.to_z3(expr), [(v, e) for v, e in ret.items()]) == utils.to_z3(closed), [(index, N)]))
             self.N_index += 1
             # res = {}
         return ret

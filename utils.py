@@ -176,7 +176,59 @@ def my_substitute(expr, mapping):
         for var, mapped in mapping:
             exec('%s = mapped' % var)
         new_expr = eval(str(z3.simplify(expr)).replace('\n', ''))
-        return new_expr
+        return z3.simplify(new_expr, som=True)
+
+def to_sympy(expr):
+    if z3.is_int_value(expr):
+        res = expr.as_long()
+    elif z3.is_const(expr) and z3.is_bool(expr):
+        res = sp.S.true if z3.is_true(expr) else sp.S.false
+    elif z3.is_const(expr):
+        res = sp.Symbol(str(expr))
+    elif z3.is_add(expr):
+        res = sum([to_sympy(arg) for arg in expr.children()])
+    elif z3.is_sub(expr):
+        children = expr.children()
+        assert(len(children) == 2)
+        res = to_sympy(children[0]) - to_sympy(children[1])
+    elif z3.is_mul(expr):
+        children = expr.children()
+        res = reduce(lambda x, y: x*y, [to_sympy(ch) for ch in children])
+    elif z3.is_mod(expr):
+        children = expr.children()
+        res = to_sympy(children[0]) % to_sympy(children[1])
+    elif z3.is_gt(expr):
+        children = expr.children()
+        res = to_sympy(children[0]) > to_sympy(children[1])
+    elif z3.is_lt(expr):
+        children = expr.children()
+        res = to_sympy(children[0]) < to_sympy(children[1])
+    elif z3.is_ge(expr):
+        children = expr.children()
+        res = to_sympy(children[0]) >= to_sympy(children[1])
+    elif z3.is_le(expr):
+        children = expr.children()
+        res = to_sympy(children[0]) <= to_sympy(children[1])
+    elif z3.is_eq(expr):
+        children = expr.children()
+        res = sp.Eq(to_sympy(children[0]), to_sympy(children[1]))
+    elif z3.is_not(expr):
+        children = expr.children()
+        res = sp.Not(to_sympy(children[0]))
+    elif z3.is_and(expr):
+        children = expr.children()
+        body = [to_sympy(ch) for ch in children]
+        res = sp.And(*body)
+    elif z3.is_or(expr):
+        children = expr.children()
+        res = sp.Or(*[to_sympy(ch) for ch in children])
+    elif len(expr.children()) == 3 and z3.is_bool(expr.children()[0]):
+        children = expr.children()
+        cond = to_sympy(children[0])
+        res = sp.Piecewise((to_sympy(children[1]), cond), (to_sympy(children[2]), sp.S.true))
+    else:
+        raise Exception('conversion for type "%s" is not implemented: %s' % (type(expr), expr))
+    return sp.simplify(res)
 
 def to_z3(sp_expr):
     self = sp.factor(sp_expr)

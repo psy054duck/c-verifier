@@ -72,6 +72,7 @@ def solve_poly_recurrence_expr(A, x0, conds, order, n):
     res = []
     for k, polynomials in ks_polynomials:
         for p in polynomials:
+            if p == sp.Integer(1): continue
             res_p = solve_poly_rec(k, p, transitions, inits)
             res.append(res_p)
     return res
@@ -85,7 +86,7 @@ def gen_poly_template(X, d):
     monomials = list(monomials)
     coeffs = sp.symbols('a:%d' % len(monomials), Real=True)
     res = sum([a*m for a, m in zip(coeffs, monomials)])
-    return res.as_poly(*X), coeffs, monomials
+    return res.as_poly(*X), list(coeffs), monomials
 
 def vec_space_d(X, inits, transitions, d):
     poly_template, coeffs, monomials = gen_poly_template(X, d)
@@ -117,10 +118,25 @@ def vec_space_d(X, inits, transitions, d):
             basis_instances.append(instance)
         # symbolic_baiss = [(vec.T * Matrix(coeffs))[0] for vec in basis]
         ret.append((k, basis_instances))
+    all_coeffs = []
+    const_dummy_symbol = sp.Symbol('aaaaa0', real=True)
+    coeffs.append(const_dummy_symbol)
+    for tran in transitions:
+        poly_prime = poly_template.as_expr().subs(tran, simultaneous=True).as_poly(*X)
+        rem = poly_prime - poly_template - const_dummy_symbol
+        rem_coeffs = rem.coeffs()
+        all_coeffs.extend(rem_coeffs)
+    res, _ = sp.linear_eq_to_matrix(all_coeffs, *coeffs)
+    basis = res.nullspace()
+    basis_instances = []
+    for vec in basis:
+        instance = poly_template.subs({c: v for v, c in zip(vec, coeffs)}, simultaneous=True)
+        basis_instances.append(instance)
+    ret.append((sp.Integer(1), basis_instances))
     return ret
 
 def solve_poly_rec(k, p, transitions, inits):
-    _n = sp.Symbol('_n')
+    _n = sp.Symbol('n', integer=True)
     if k != 1:
         if k == 0:
             if sp.simplify(p.subs(inits, simultaneous=True) == 0):
@@ -133,43 +149,6 @@ def solve_poly_rec(k, p, transitions, inits):
             c = cs[0]
             return (p, sp.simplify(p.subs(inits, simultaneous=True)) + _n*c)
 
-# def main():
-#     # X = [a, b, x, y, u, v]
-#     degr = 2
-# 
-#     # poly_template, coeffs = gen_poly_template(X, d)
-#     # inits = {x: a, y: b, u: b, v: a}
-#     # transition1 = {x: x - y, y: y, u: u, v: u + v, a: a, b: b}
-#     # transition2 = {x: x, y: y - x, u: u + v, v: v, a: a, b: b}
-#     # inits = {}
-#     ############################################################################
-#     # r, k, q, d, s, t, n, a = symbols('r, k, q, d, s, t, n, a')
-#     # X = [r, k, q, d, s, t, n, a]
-#     # inits = {d: a, r: n % d, t: 0, k: n % (d - 2), q: 4*(n/(d - 2) - n/d)}
-#     # transition1 = {t: r, r: 2*r - k + q + d + 2, k: r, q: q + 4, d: d + 2}
-#     # transition2 = {t: r, r: 2*r - k + q, k: r, d: d + 2}
-#     # transition3 = {t: r, r: 2*r - k + q - d - 2, k: r, q: q - 4, d: d + 2}
-#     # transition4 = {t: r, r: 2*r - k + q - 2*d - 4, k: r, q: q - 8, d: d + 2}
-#     # transitions = [transition1, transition2, transition3, transition4]
-#     ############################################################################
-#     # X = list(symbols('x1 x2 y1 y2 y3'))
-#     # x1, x2, y1, y2, y3 = X
-#     # inits = {y1: 0, y2: 0, y3: x1}
-#     # transition1 = {y1: y1 + 1, y2: 0, y3: y3 - 1}
-#     # transition2 = {y2: y2 + 1, y3: y3 - 1}
-#     # transitions = [transition1, transition2]
-#     ############################################################################
-#     X = list(symbols('u v r A R'))
-#     u, v, r, A, R = X
-#     inits = {u: 2*R + 1, v: 1, r: R*R - A}
-#     transition1 = {r: r - v, v: v + 2}
-#     transition2 = {r: r + u, u: u + 2}
-#     transitions = [transition1, transition2]
-#     ks_polynomials = vec_space_d(X, inits, transitions, degr)
-#     for k, polynomials in ks_polynomials:
-#         for p in polynomials:
-#             res = solve_rec(k, p, transitions, inits)
-#             print(res)
 
 def symbolic_closed_form_linear(A, x0, conds, order, n, bnd=100):
     rename = {order[i]: sp.Symbol('_PRS_x%d' % i) for i in range(len(order))}
