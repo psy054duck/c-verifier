@@ -126,7 +126,7 @@ class C2Z3Visitor(c_ast.NodeVisitor):
                 # print(z3variables[N_name] >= 0)
             # s.add(z3.Int('c2z3_tmp_i_0') == 3)
             s.add(z3.Not(assertion))
-            print(s)
+            # print(s)
             # s.add(assertion)
             # simplified = z3.simplify(z3.substitute(assertion, (z3.Int('c2z3_tmp_i_0'), z3.IntVal(4))))
             # print(simplified)

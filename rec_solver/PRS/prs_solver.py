@@ -1,5 +1,6 @@
 import sympy as sp
 from sympy.core import symbol
+from sympy.utilities.iterables import strongly_connected_components
 from .condition import And, PolyCondition, ModCondition
 from .closed_form import closed_form, symbolic_closed_form_linear, solve_rec_expr
 # from .old_parser import parse
@@ -62,10 +63,41 @@ def solve_sym_str(recurrence: str):
     if all(is_linear_transition(trans) for trans in sp_transitions):
         A = [trans2matrix(tran, variables) for tran in sp_transitions]
         res = symbolic_closed_form_linear(A, x0, cond, variables, index, bnd=99999999)
-    else:
-        #TODO non-linear case
-        raise Exception('Non-linear Case Not Yet Implemented')
+    elif cond[0]: # if there are non-linear transition while the recurrence is non-conditional
+        transition = sp_transitions[0]
+        layered_transition = transition_layers(transition, index)
+        assert(all([len(x) == 1 for x in layered_transition]))
+        closed_form = {}
+        for trans in layered_transition:
+            v = list(trans.keys())[0]
+            f = sp.Function('f')
+            rec = f(index + 1) - (trans[v].subs({v: f(index)} | closed_form))
+            init_value = x0[variables.index(v)]
+            closed = sp.rsolve(rec, f(index), {f(0): init_value})
+            closed_form[v] = closed
+        m = sp.zeros(len(variables), 1)
+        const_dummy = sp.Symbol('constant')
+        for i, v in enumerate(variables):
+            if v != const_dummy:
+                m[i] = closed_form[v]
+            else:
+                m[i] = 1
+        res = ([0], [[m]])
     return res, variables, initial_symbols
+
+def transition_layers(transition, index):
+    const_dummy = sp.Symbol('constant')
+    dependencies = {v: set(transition[v].free_symbols) - {const_dummy, index} for v in transition if v is not const_dummy}
+    V = list(set(transition.keys()) - {const_dummy})
+    E = []
+    for v1, neighbors in dependencies.items():
+        for v2 in neighbors:
+            E.append((v1, v2))
+    components = strongly_connected_components((V, E))
+    ret = []
+    for c in components:
+        ret.append({v: transition[v] for v in c})
+    return ret
 
 def solve_recurrence_expr(recurrence):
     conds, x0, str_transitions, variables, index = parse(recurrence)
@@ -83,5 +115,4 @@ def solve_sym(filename):
             res = solve_sym_str(recurrence)
         except:
             res = solve_recurrence_expr(recurrence)
-            print(res)
         return res
