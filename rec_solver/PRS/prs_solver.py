@@ -11,11 +11,20 @@ import time
 def is_linear_transition(transition):
     variables = transition.keys()
     for _, exp in transition.items():
-        for v in variables:
-            diff_v = sp.diff(exp, v, 2)
-            if sp.simplify(diff_v) != 0:
-                return False
+        for v1 in variables:
+            for v2 in variables:
+                diff_v = sp.diff(exp, v1, v2)
+                if sp.simplify(diff_v) != 0:
+                    return False
     return True
+
+def is_poly_transition(transition):
+    for _, exp in transition.items():
+        free_symbols = exp.free_symbols
+        if not exp.is_polynomial(free_symbols):
+            return False
+    return True
+
 
 def trans2matrix(transition, var_order):
     matrix = sp.eye(len(var_order))
@@ -63,7 +72,7 @@ def solve_sym_str(recurrence: str):
     if all(is_linear_transition(trans) for trans in sp_transitions):
         A = [trans2matrix(tran, variables) for tran in sp_transitions]
         res = symbolic_closed_form_linear(A, x0, cond, variables, index, bnd=99999999)
-    elif cond[0]: # if there are non-linear transition while the recurrence is non-conditional
+    elif cond[0] == sp.true: # if there are non-linear transition while the recurrence is non-conditional
         transition = sp_transitions[0]
         layered_transition = transition_layers(transition, index)
         assert(all([len(x) == 1 for x in layered_transition]))
@@ -102,11 +111,12 @@ def transition_layers(transition, index):
 def solve_recurrence_expr(recurrence):
     conds, x0, str_transitions, variables, index = parse(recurrence)
     sp_transitions = [{sp.Symbol(v): e for v, e in trans.items()} for trans in str_transitions]
-    if all(is_linear_transition(trans) for trans in sp_transitions):
-        A = [trans2matrix(tran, variables) for tran in sp_transitions]
+    # if all(is_linear_transition(trans) for trans in sp_transitions):
+    #     A = [trans2matrix(tran, variables) for tran in sp_transitions]
+    if all(is_poly_transition(trans) for trans in sp_transitions):
+        return solve_rec_expr(sp_transitions, x0, conds, variables, index)
     else:
-        raise Exception('Non-linear Case Not Yet Implemented')
-    return solve_rec_expr(A, x0, conds, variables, index)
+        raise Exception('Non-poly Case Not Yet Implemented')
 
 def solve_sym(filename):
     with open(filename) as fp:
@@ -115,4 +125,5 @@ def solve_sym(filename):
             res = solve_sym_str(recurrence)
         except:
             res = solve_recurrence_expr(recurrence)
+        print(res)
         return res

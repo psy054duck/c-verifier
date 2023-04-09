@@ -60,13 +60,13 @@ def matrix2transitions(A, order):
         transitions.append({var: transition_mat[i].subs({constant: 1}) for i, var in enumerate(order) if str(var) != 'constant'})
     return transitions
 
-def solve_rec_expr(A, x0, conds, order, n):
-    return solve_poly_recurrence_expr(A, x0, conds, order, n)
+def solve_rec_expr(transitions, x0, conds, order, n):
+    return solve_poly_recurrence_expr(transitions, x0, conds, order, n)
 
-def solve_poly_recurrence_expr(A, x0, conds, order, n):
-    degr = 2
+# def solve_poly_recurrence_expr(A, x0, conds, order, n):
+def solve_poly_recurrence_expr(transitions, x0, conds, order, n, degr=3):
     X = [var for var in order if str(var) != 'constant']
-    transitions = matrix2transitions(A, order)
+    # transitions = matrix2transitions(A, order)
     ks_polynomials = vec_space_d(X, x0, transitions, degr)
     inits = {var: x0[i] for i, var in enumerate(order) if str(var) != 'constant'}
     res = []

@@ -135,6 +135,7 @@ class C2Z3Visitor(c_ast.NodeVisitor):
             # simplified = z3.Tactic('propagate-ineqs')(simplified)[0]
             start_time = time.time()
             res = solver.check(z3.And(*s))
+            print(s)
             if res == z3.unknown:
                 n = Real('n')
                 for stmt in s:

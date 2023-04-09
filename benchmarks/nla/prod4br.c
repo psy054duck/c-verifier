@@ -30,6 +30,8 @@ int main() {
             b = b - 1;
             q = q + (a + b + 1) * p; /*fix a bug here---  was (a+b-1)*/
         }
+        x = x;
+        y = y;
     }
 
     __VERIFIER_assert(q == x * y);
